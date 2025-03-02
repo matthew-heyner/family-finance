@@ -1,12 +1,11 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import { logger } from '../utils/logger';
 
 // Load environment variables
-dotenv.config();
+require('dotenv').config();
 
 // MongoDB connection string
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/family-finance';
+const MONGODB_URI = 'mongodb://localhost:27017/family-finance';
 
 // Connect to MongoDB
 const connectDB = async (): Promise<void> => {
@@ -19,7 +18,10 @@ const connectDB = async (): Promise<void> => {
     } else {
       logger.error('Unknown error connecting to MongoDB');
     }
-    process.exit(1);
+    // Don't exit the process on connection failure in development
+    if (process.env.NODE_ENV === 'production') {
+      process.exit(1);
+    }
   }
 };
 

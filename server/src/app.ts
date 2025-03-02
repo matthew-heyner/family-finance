@@ -1,14 +1,13 @@
-import express from 'express';
-import cors from 'cors';
+import * as express from 'express';
+import * as cors from 'cors';
 import helmet from 'helmet';
-import compression from 'compression';
-import morgan from 'morgan';
+import * as compression from 'compression';
+import * as morgan from 'morgan';
 import { rateLimit } from 'express-rate-limit';
-import dotenv from 'dotenv';
-import path from 'path';
+import * as path from 'path';
 
 // Load environment variables
-dotenv.config();
+require('dotenv').config();
 
 // Import routes
 import authRoutes from './routes/auth.routes';

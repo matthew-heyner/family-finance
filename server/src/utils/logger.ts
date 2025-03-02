@@ -1,5 +1,5 @@
-import winston from 'winston';
-import path from 'path';
+import * as winston from 'winston';
+import * as path from 'path';
 
 // Define log levels
 const levels = {
@@ -27,7 +27,7 @@ const colors = {
 };
 
 // Add colors to winston
-winston.addColors(colors);
+winston.format.colorize().addColors(colors);
 
 // Define the format for console output
 const consoleFormat = winston.format.combine(
@@ -52,13 +52,13 @@ const transports = [
   }),
   // Error log file transport
   new winston.transports.File({
-    filename: path.join('logs', 'error.log'),
+    filename: path.join(__dirname, '..', '..', 'logs', 'error.log'),
     level: 'error',
     format: fileFormat,
   }),
   // All logs file transport
   new winston.transports.File({
-    filename: path.join('logs', 'all.log'),
+    filename: path.join(__dirname, '..', '..', 'logs', 'all.log'),
     format: fileFormat,
   }),
 ];
