@@ -7,9 +7,8 @@ import { setAuthToken } from '@/utils/authUtils';
 interface User {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  role: 'admin' | 'member' | 'child';
+  name: string;
+  role: string;
   familyId?: string;
 }
 
@@ -49,9 +48,25 @@ export const login = createAsyncThunk(
   async (credentials: LoginCredentials, { rejectWithValue }) => {
     try {
       const response = await authService.login(credentials);
-      localStorage.setItem('token', response.token);
-      setAuthToken(response.token);
-      return response;
+      
+      // Check if the response has the expected structure
+      if (response.success && response.token) {
+        localStorage.setItem('token', response.token);
+        setAuthToken(response.token);
+        
+        // Transform the user data if needed
+        const user: User = {
+          id: response.data._id,
+          email: response.data.email,
+          name: response.data.name,
+          role: response.data.role || 'member',
+          familyId: response.data.familyId
+        };
+        
+        return { token: response.token, user };
+      }
+      
+      return rejectWithValue('Invalid response from server');
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Login failed');
     }
@@ -63,9 +78,25 @@ export const register = createAsyncThunk(
   async (userData: RegisterData, { rejectWithValue }) => {
     try {
       const response = await authService.register(userData);
-      localStorage.setItem('token', response.token);
-      setAuthToken(response.token);
-      return response;
+      
+      // Check if the response has the expected structure
+      if (response.success && response.token) {
+        localStorage.setItem('token', response.token);
+        setAuthToken(response.token);
+        
+        // Transform the user data if needed
+        const user: User = {
+          id: response.data._id,
+          email: response.data.email,
+          name: response.data.name,
+          role: response.data.role || 'member',
+          familyId: response.data.familyId
+        };
+        
+        return { token: response.token, user };
+      }
+      
+      return rejectWithValue('Invalid response from server');
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Registration failed');
     }
@@ -97,8 +128,22 @@ export const checkAuth = createAsyncThunk(
       }
       
       setAuthToken(token);
-      const user = await authService.getCurrentUser();
-      return { token, user };
+      const response = await authService.getCurrentUser();
+      
+      if (response.success && response.data) {
+        // Transform the user data if needed
+        const user: User = {
+          id: response.data._id,
+          email: response.data.email,
+          name: response.data.name,
+          role: response.data.role || 'member',
+          familyId: response.data.familyId
+        };
+        
+        return { token, user };
+      }
+      
+      return rejectWithValue('Invalid user data');
     } catch (error: any) {
       localStorage.removeItem('token');
       setAuthToken(null);

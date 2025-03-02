@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 import User from '../models/user.model';
 import { AppError } from '../middleware/error.middleware';
 import { logger } from '../utils/logger';

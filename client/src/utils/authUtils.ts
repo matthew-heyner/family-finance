@@ -14,12 +14,20 @@ export const setAuthToken = (token: string | null): void => {
 
 /**
  * Formats user name for display
- * @param firstName First name
- * @param lastName Last name
- * @returns Formatted full name
+ * @param name Full name from the server
+ * @returns Formatted name for display
  */
-export const formatUserName = (firstName: string, lastName: string): string => {
-  return `${firstName} ${lastName}`;
+export const formatUserName = (name: string): string => {
+  return name;
+};
+
+/**
+ * Extracts first name from full name
+ * @param name Full name
+ * @returns First name
+ */
+export const getFirstName = (name: string): string => {
+  return name.split(' ')[0];
 };
 
 /**
@@ -29,8 +37,8 @@ export const formatUserName = (firstName: string, lastName: string): string => {
  * @returns Boolean indicating if user has access
  */
 export const hasRole = (
-  userRole: 'admin' | 'member' | 'child',
-  requiredRoles: ('admin' | 'member' | 'child')[]
+  userRole: string,
+  requiredRoles: string[]
 ): boolean => {
   return requiredRoles.includes(userRole);
 };

@@ -44,7 +44,16 @@ const authService = {
    * @returns Promise with token and user data
    */
   register: async (userData: RegisterData) => {
-    const response = await axios.post(`${API_URL}/register`, userData);
+    // Transform the data to match the server's expected format
+    const serverData = {
+      name: `${userData.firstName} ${userData.lastName}`.trim(),
+      email: userData.email,
+      password: userData.password,
+      // Include familyName if provided
+      ...(userData.familyName && { familyName: userData.familyName })
+    };
+    
+    const response = await axios.post(`${API_URL}/register`, serverData);
     return response.data;
   },
 

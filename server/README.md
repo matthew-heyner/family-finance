@@ -28,46 +28,48 @@ This is the backend server for the Family Finance application, built with Node.j
 - **Tesseract.js** - OCR for receipt scanning
 - **Jest** - Testing framework
 
-## Project Structure
-
-```
-server/
-├── src/
-│   ├── config/       # Configuration files
-│   ├── controllers/  # Request handlers
-│   ├── middleware/   # Express middleware
-│   ├── models/       # Mongoose models
-│   ├── routes/       # API routes
-│   ├── services/     # Business logic
-│   ├── utils/        # Utility functions
-│   └── app.ts        # Express app
-├── dist/             # Compiled JavaScript
-├── logs/             # Application logs
-├── .env              # Environment variables
-├── package.json      # Dependencies
-└── tsconfig.json     # TypeScript configuration
-```
-
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
+- Node.js (v16 or higher)
 - MongoDB (local or Atlas)
 
 ### Installation
 
-1. Clone the repository
-2. Navigate to the server directory
-3. Install dependencies:
+1. Navigate to the server directory:
+   ```
+   cd server
+   ```
+
+2. Install dependencies:
    ```
    npm install
    ```
-4. Create a `.env` file based on the `.env.example` file
-5. Start the development server:
+
+3. Create a `.env` file in the server directory with the following variables:
+   ```
+   NODE_ENV=development
+   PORT=5000
+   MONGODB_URI=mongodb://localhost:27017/family-finance
+   JWT_SECRET=your_jwt_secret_key
+   JWT_EXPIRE=30d
+   JWT_COOKIE_EXPIRE=30
+   
+   # For password reset functionality (optional)
+   EMAIL_SERVICE=smtp
+   EMAIL_HOST=smtp.example.com
+   EMAIL_PORT=587
+   EMAIL_USERNAME=your_email@example.com
+   EMAIL_PASSWORD=your_email_password
+   EMAIL_FROM=noreply@familyfinance.com
+   ```
+
+4. Start the development server:
    ```
    npm run dev
    ```
+   The server will be available at `http://localhost:5000`
 
 ### Available Scripts
 
@@ -89,16 +91,53 @@ The API endpoints are organized around the following resources:
 - `/api/reports` - Reporting endpoints
 - `/api/receipts` - Receipt processing
 
-For detailed API documentation, refer to the API documentation (coming soon).
+### Authentication Endpoints
 
-## Environment Variables
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - Login a user
+- `GET /api/auth/logout` - Logout a user
+- `GET /api/auth/me` - Get current user
+- `PUT /api/auth/updatedetails` - Update user details
+- `PUT /api/auth/updatepassword` - Update user password
+- `POST /api/auth/forgotpassword` - Request password reset
+- `PUT /api/auth/resetpassword/:resettoken` - Reset password
 
-- `NODE_ENV` - Environment (development, production)
-- `PORT` - Server port
-- `MONGODB_URI` - MongoDB connection string
-- `JWT_SECRET` - Secret for JWT signing
-- `JWT_EXPIRE` - JWT expiration time
-- `EMAIL_SERVICE` - Email service provider
-- `EMAIL_USERNAME` - Email username
-- `EMAIL_PASSWORD` - Email password
-- `EMAIL_FROM` - Email sender address 
+## Database Setup
+
+### Local MongoDB
+
+1. Install MongoDB Community Edition on your machine
+2. Start the MongoDB service
+3. Connect using the connection string: `mongodb://localhost:27017/family-finance`
+
+### MongoDB Atlas
+
+1. Create a MongoDB Atlas account
+2. Create a new cluster
+3. Get your connection string and update the `.env` file
+
+## Folder Structure
+
+```
+server/
+├── src/
+│   ├── config/       # Configuration files
+│   ├── controllers/  # Request handlers
+│   ├── middleware/   # Express middleware
+│   ├── models/       # Mongoose models
+│   ├── routes/       # API routes
+│   ├── services/     # Business logic
+│   ├── utils/        # Utility functions
+│   └── app.ts        # Express app
+├── dist/             # Compiled JavaScript
+├── logs/             # Application logs
+├── .env              # Environment variables
+├── package.json      # Dependencies
+└── tsconfig.json     # TypeScript configuration
+```
+
+## Troubleshooting
+
+- If you encounter CORS issues, make sure the client URL is properly configured in the server's CORS settings
+- For MongoDB connection issues, verify your connection string and network settings
+- For authentication issues, check your JWT secret and expiration settings 
